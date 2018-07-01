@@ -81,7 +81,7 @@ contract JobApplicant {
   )
   public
   {
-    buyer = _applicant;
+    applicant = _applicant;
     listingContract = Listing(_listingContractAddress);
     created = now;
     emit JobApplicationChange(internalStage);
