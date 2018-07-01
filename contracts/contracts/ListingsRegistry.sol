@@ -1,8 +1,8 @@
 pragma solidity 0.4.23;
 
-/// @title Listing
-/// @dev Used to keep marketplace of listings for buyers and sellers
-/// @author Matt Liu <matt@originprotocol.com>, Josh Fraser <josh@originprotocol.com>, Stan James <stan@originprotocol.com>
+/// @title Job Listing
+/// @dev Used to keep marketplace of job listings from the companies
+/// @author Waheed Rahuman waheed@hellotoken.io
 
 import "./Listing.sol";
 
@@ -31,7 +31,7 @@ contract ListingsRegistry {
   constructor()
     public
   {
-    // Defines origin admin address - may be removed for public deployment
+    // Defines HelloToken admin address 
     owner = msg.sender;
   }
 
@@ -60,48 +60,69 @@ contract ListingsRegistry {
       listings[_index],
       listings[_index].owner(),
       listings[_index].ipfsHash(),
-      listings[_index].price(),
-      listings[_index].unitsAvailable()
+      listings[_index].workingHours(),
+      listings[_index].resourceType(),
+      listings[_index].resourceRate(),
+      listings[_index].totalResourceRequired()
     );
   }
 
-  /// @dev create(): Create a new listing
-  /// @param _ipfsHash Hash of data on ipfsHash
-  /// @param _price Price of unit in wei
-  /// @param _unitsAvailable Number of units availabe for sale at start
-  ///
+
   /// Sample Remix invocation:
   /// ["0x01","0x7d","0xfd","0x85","0xd4","0xf6","0xcb","0x4d","0xcd","0x71","0x5a","0x88","0x10","0x1f","0x7b","0x1f","0x06","0xcd","0x1e","0x00","0x9b","0x23","0x27","0xa0","0x80","0x9d","0x01","0xeb","0x9c","0x91","0xf2","0x31"],"3140000000000000000",42
+
+/*
+*	@dev create(); Create a new job requirements
+*	Data Storage
+*	------------
+*	_ipfsHash		Hash	Hash of data on ipfsHash
+*	_workingHours		unint	No of working hours required
+*	_resourceType		unint	Resource type Agent or Auditor
+*	_resourceRate		unint	Rate offered per hour in wei
+*	_totalResourceRequired	Number	No of agents/auditors required
+*/
+
   function create(
     bytes32 _ipfsHash,
-    uint _price,
-    uint _unitsAvailable
+    uint _workingHours,
+    uint _resourceType,
+    uint _resourceRate,
+    uint _totalResourceRequired
   )
     public
     returns (uint)
   {
-    listings.push(new Listing(msg.sender, _ipfsHash, _price, _unitsAvailable));
+    listings.push(new Listing(msg.sender, _ipfsHash, _workingHours, _resourceType,_resourceRate,_totalResourceRequired));
     emit NewListing(listings.length-1);
     return listings.length;
   }
 
-  /// @dev createOnBehalf(): Create a new listing with specified creator
-  ///                        Used for migrating from old contracts (admin only)
-  /// @param _ipfsHash Hash of data on ipfsHash
-  /// @param _price Price of unit in wei
-  /// @param _unitsAvailable Number of units availabe for sale at start
-  /// @param _creatorAddress Address of account to be the creator
+
+/*
+*	@dev createOnBehalf(); Migrate job posting as admin
+*	Data Storage
+*	------------
+*	_ipfsHash		Hash	Hash of data on ipfsHash
+*	_workingHours		unint	No of working hours required
+*	_resourceType		unint	Resource type Agent or Auditor
+*	_resourceRate		unint	Rate offered per hour in wei
+*	_totalResourceRequired	Number	No of agents/auditors required
+*	_creatorAddress		Address	Adding listing on behalf of someone (Only by admin)
+*/
+
   function createOnBehalf(
     bytes32 _ipfsHash,
-    uint _price,
-    uint _unitsAvailable,
+    uint _workingHours,
+    uint _resourceType,
+    uint _resourceRate,
+    uint _totalResourceRequired,
     address _creatorAddress
   )
     public
     returns (uint)
   {
     require (msg.sender == owner, "Only callable by registry owner");
-    listings.push(new Listing(_creatorAddress, _ipfsHash, _price, _unitsAvailable));
+    listings.push(new Listing(_creatorAddress,  _ipfsHash, _workingHours, _resourceType,_resourceRate,_totalResourceRequired));
     emit NewListing(listings.length-1);
     return listings.length;
   }
