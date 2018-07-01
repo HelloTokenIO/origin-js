@@ -48,4 +48,27 @@ contract JobApplicant {
 
   Stages private internalStage = Stages.AWAITING_INTERVIEW;
   
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Problem between employer and employee either open a dispute
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function openDispute()
+  public
+  {
+    // Must be employee or employee
+    require(
+      (msg.sender == buyer) ||
+      (msg.sender == listingContract.owner())
+    );
+
+    // Must be in a valid stage
+    require(
+      (stage() == Stages.EMPLOYEMENT_PERIOD)
+    );
+
+    internalStage = Stages.IN_DISPUTE;
+    emit JobApplicationChange(internalStage);
+
+    // TODO: Create a dispute contract?
+    // Right now there's no way to exit this state.
+  }  
 }
