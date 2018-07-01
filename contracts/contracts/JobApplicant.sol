@@ -66,7 +66,7 @@ contract JobApplicant {
   {
     // Must be employee or employee
     require(
-      (msg.sender == buyer) ||
+      (msg.sender == applicant) ||
       (msg.sender == listingContract.owner())
     );
 
