@@ -47,6 +47,53 @@ contract JobApplicant {
   */
 
   Stages private internalStage = Stages.AWAITING_INTERVIEW;
+  Listing public listingContract; // listing that is being purchased
+  address public applicant; // User who is buying. Seller is derived from listing
+  uint public created;
+  uint public applicationTimeout;
+
+  /*
+  * Modifiers
+  */
+
+  modifier isEmployer() {
+    require(msg.sender == listingContract.owner());
+    _;
+  }
+
+  modifier isApplicant() {
+    require(msg.sender == applicant);
+    _;
+  }
+
+  modifier atStage(Stages _stage) {
+    require(stage() == _stage);
+    _;
+  }
+
+  /*
+  * Public functions
+  */
+
+  constructor(
+    address _listingContractAddress,
+    address _applicant
+  )
+  public
+  {
+    buyer = _applicant;
+    listingContract = Listing(_listingContractAddress);
+    created = now;
+    emit JobApplicationChange(internalStage);
+  }
+
+  function data()
+  public
+  view
+  returns (Stages _stage, Listing _listingContract, address _applicant, uint _created, uint _applicantTimout) {
+      return (stage(), listingContract, applicant, created, applicantTimout);
+  }
+  
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Applicant cancels the job application
