@@ -102,7 +102,10 @@ contract JobApplicant {
   public
   {
     // This should be called only by the job listing owner
-    require(msg.sender == applicant); 
+    require(
+      (msg.sender == applicant)
+    );
+    
 
     // Must be in a valid stage
     require(
@@ -123,7 +126,10 @@ contract JobApplicant {
   public
   {
     // This should be called only by the job listing owner
-    require(msg.sender == listingContract.owner());
+    require(
+      (msg.sender == listingContract.owner())
+    );
+
 
     // Must be in a valid stage
     require(
@@ -146,12 +152,34 @@ contract JobApplicant {
     return internalStage;
   }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Terminate the Job Contract any time
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function terminateEmployment()
+  public
+  {
+    // Must be employee 
+    require(
+      (msg.sender == listingContract.owner())
+    );
+
+    // Must be in a valid stage
+    require(
+      (stage() == Stages.EMPLOYEMENT_PERIOD)
+    );
+
+    internalStage = Stages.EMPLOYEMENT_TERMINATION;
+    emit JobApplicationChange(internalStage);
+
+    // TODO: Create a dispute contract?
+    // Right now there's no way to exit this state.
+  }  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Problem between employer and employee either open a dispute
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   function openDispute()
   public
   {
-    // Must be employee or employee
+    // Must be employee or employer
     require(
       (msg.sender == applicant) ||
       (msg.sender == listingContract.owner())
@@ -168,4 +196,5 @@ contract JobApplicant {
     // TODO: Create a dispute contract?
     // Right now there's no way to exit this state.
   }  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 }
