@@ -3,8 +3,8 @@ pragma solidity 0.4.23;
 /// @title Listing
 /// @dev To an individual Job Listing, an job applicant can apply and employ can hire
 
-import "./JobApplicant.sol";
-import "./JobApplicationLibrary.sol";
+// import "./JobApplicant.sol";
+// import "./JobApplicationLibrary.sol";
 
 
 contract Listing {
@@ -13,8 +13,8 @@ contract Listing {
    * Events
    */
 
-  event ListingApplied(JobApplicant _jobApplicantContract);
-  event ListingChange();
+  // event ListingApplied(JobApplicant _jobApplicantContract);
+   event ListingChange();
 
 /*
 *	Data Storage
@@ -37,17 +37,20 @@ contract Listing {
     uint public resourceType;
     uint public resourceRate;
     uint public totalResourceRequired;
+    uint public created;
+    uint public expiration;
 
-    Hire[] public hiring;
-    JobApplicant[] public applicants;
+    // Hire[] public hiring;
+    // JobApplicant[] public applicants;
 
     constructor (
       address _owner,
       bytes32 _ipfsHash,
       uint _resourceRate,
-      uint _totalResourceRequired
+      uint _totalResourceRequired,
       uint _resourceType,
-      uint _workingHours,
+      uint _workingHours
+      
     )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,77 +93,77 @@ contract Listing {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// @dev ApplyToJob()		--> An applicant can apply for a Job Listing
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  function ApplyToJob()
-    public
-    payable
-  {
+  // function ApplyToJob()
+  //   public
+  //   payable
+  // {
 
-    // Ensure that we are not past the expiration
-    require(now < expiration);
+  //   // Ensure that we are not past the expiration
+  //   require(now < expiration);
 
-    // Create Job Application contract
-    JobApplicant applicant = JobApplicant.newApplicant(this, msg.sender);
+  //   // Create Job Application contract
+  //   JobApplicant applicant = JobApplicationLibrary.newApplicant(this, msg.sender);
 
-    applicants.push(applicant);
+  //   applicants.push(applicant);
 
-    // TODO STAN: How to call function *AND* transfer value??
-    applicantContract.pay.value(msg.value)();
+  //   // TODO STAN: How to call function *AND* transfer value??
+  //   // applicant.pay.value(msg.value)();
 
-    emit ListingApplied(applicantContract);
-    emit ListingChange();
-  }
+  //   emit ListingApplied(applicant);
+  //   emit ListingChange();
+  // }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///	@dev totalJobApplicants(): Return number of applicants for a given Job Listing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  function totalJobApplicants()
-    public
-    constant
-    returns (uint)
-  {
-      return applicants.length;
-  }
+  // function totalJobApplicants()
+  //   public
+  //   constant
+  //   returns (uint)
+  // {
+  //     return applicants.length;
+  // }
 
-  /// @dev getApplicant(): Return Job Application info for a given Job Listing
-  /// @param _index the index of the Listing we want info about
-  function getApplicant(uint _index)
-    public
-    constant
-    returns (JobApplicant)
-  {
-    return (
-      applicants[_index]
-    );
-  }
+  // /// @dev getApplicant(): Return Job Application info for a given Job Listing
+  // /// @param _index the index of the Listing we want info about
+  // function getApplicant(uint _index)
+  //   public
+  //   constant
+  //   returns (JobApplicant)
+  // {
+  //   return (
+  //     applicants[_index]
+  //   );
+  // }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///			Hiring Contract Starts							      //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function hireApplicant(uint _agentApply)
-    public
-    payable
-  {
-    // Ensure that this is not trying to hire more than required agents
-//    require(_agentApply <= totalResourceRequired);
+//   function hireApplicant(uint _agentApply)
+//     public
+//     payable
+//   {
+//     // Ensure that this is not trying to hire more than required agents
+// //    require(_agentApply <= totalResourceRequired);
 
-    // Ensure that we are not past the expiration
-    require(now < expiration);
+//     // Ensure that we are not past the expiration
+//     require(now < expiration);
 
-    // Create Job Application contract
-    JobApplicant applicant = JobApplicant.newApplicant(this, msg.sender);
+//     // Create Job Application contract
+//     JobApplicant applicant = JobApplicationLibrary.newApplicant(this, msg.sender);
 
-    // Count units as sold
-    //totalResourceRequired -= _agentApply;
+//     // Count units as sold
+//     //totalResourceRequired -= _agentApply;
 
-    applicants.push(applicant);
+//     applicants.push(applicant);
 
-    // TODO STAN: How to call function *AND* transfer value??
-    applicantContract.pay.value(msg.value)();
+//     // TODO STAN: How to call function *AND* transfer value??
+//     // applicant.pay.value(msg.value)();
 
-    emit ListingApplied(applicantContract);
-    emit ListingChange();
-  }
+//     emit ListingApplied(applicant);
+//     emit ListingChange();
+//   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// @dev close(): Allows an employer to close the Job Listing from further applicants

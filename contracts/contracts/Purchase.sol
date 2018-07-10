@@ -94,11 +94,11 @@ contract Purchase {
   payable
   atStage(Stages.AWAITING_PAYMENT)
   {
-    if (address(this).balance >= listingContract.price()) {
+    // if (address(this).balance >= listingContract.price()) {
       // Buyer (or their proxy) has paid enough to cover purchase
       internalStage = Stages.SHIPPING_PENDING;
       emit PurchaseChange(internalStage);
-    }
+    // }
     // Possible that nothing happens, and contract just accumulates sent value
   }
 

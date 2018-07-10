@@ -49,7 +49,7 @@ contract ListingsRegistry {
   function getListing(uint _index)
     public
     constant
-    returns (Listing, address, bytes32, uint, uint)
+    returns (Listing, address, bytes32, uint, uint,uint, uint)
   {
     // Test in truffle deelop:
     // ListingsRegistry.deployed().then(function(instance){ return instance.getListing.call(0) })
