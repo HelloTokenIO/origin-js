@@ -48,7 +48,6 @@ class Listings extends ResourceBase {
     // We explicitly set these fields to white list the allowed fields.
     const listing = {
       name: ipfsData.data.name,
-      category: ipfsData.data.category,
       description: ipfsData.data.description,
       location: ipfsData.data.location,
       pictures: ipfsData.data.pictures,
@@ -56,9 +55,12 @@ class Listings extends ResourceBase {
       address: contractData.address,
       index: contractData.index,
       ipfsHash: contractData.ipfsHash,
-      sellerAddress: contractData.lister,
-      price: Number(contractData.price),
-      unitsAvailable: Number(contractData.unitsAvailable)
+      sellerAddress: contractData.owner,
+
+      workingHours: Number(contractData.workingHours),
+      resourceType: Number(contractData.resourceType),
+      resourceRate: Number(contractData.resourceRate),
+      totalResourceRequired: Number(contractData.totalResourceRequired)
     }
 
     // TODO: Validation
@@ -67,8 +69,8 @@ class Listings extends ResourceBase {
   }
 
   async create(data, schemaType) {
-    if (data.price == undefined) {
-      throw "You must include a price"
+    if (data.resourceRate == undefined) {
+      throw "You must include a Resource Rate"
     }
     if (data.name == undefined) {
       throw "You must include a name"
@@ -99,8 +101,11 @@ class Listings extends ResourceBase {
     try {
       transactionReceipt = await this.contractService.submitListing(
         ipfsHash,
-        formListing.formData.price,
-        units)
+        formListing.formData.workingHours,
+        formListing.formData.resourceType,
+        formListing.formData.resourceRate,
+        formListing.formData.totalResourceRequired
+        )
     } catch (error) {
       console.error(error)
       throw new Error(`ETH Failure: ${error}`)
