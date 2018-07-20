@@ -123,6 +123,24 @@ class ContractService {
     }
   }
 
+
+  async applyToJob(ipfsListing, workingHours, resourceType, resourceRate, totalResourceRequired) {
+    try {
+      const net = await this.web3.eth.net.getId()
+      const account = await this.currentAccount()
+      const instance = await this.deployed(ListingContract)
+
+       // Note we cannot get the listingId returned by our contract.
+      // See: https://forum.ethereum.org/discussion/comment/31529/#Comment_31529
+      return instance.methods
+        .create(this.getBytes32FromIpfsHash(ipfsListing), workingHours, resourceType, resourceRate, totalResourceRequired)
+        .send({ from: account, gas: 4476768 })
+    } catch (error) {
+      console.error("Error submitting to the Ethereum blockchain: " + error)
+      throw error
+    }
+  }
+
   async deployed(contract, addrs) {
     const net = await this.web3.eth.net.getId()
     let storedAddress = contract.networks[net] && contract.networks[net].address

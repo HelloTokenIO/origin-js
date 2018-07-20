@@ -1,7 +1,7 @@
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
-/// @title JobApplicantLibrary
-/// @dev An collection of helper tools for a JobApplicant
+// /// @title JobApplicantLibrary
+// /// @dev An collection of helper tools for a JobApplicant
 
 import "./JobApplicant.sol";
 import "./Listing.sol";

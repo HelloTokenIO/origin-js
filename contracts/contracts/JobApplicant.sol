@@ -1,7 +1,7 @@
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
-/// @title JobApplicant
-/// @dev An Application to a Job Listing and its status
+// /// @title JobApplicant
+// /// @dev An Application to a Job Listing and its status
 import "./Listing.sol";
 
 
@@ -104,14 +104,14 @@ contract JobApplicant
     {
         // This should be called only by the job listing owner
         require(
-            (msg.sender == applicant)
+            msg.sender == applicant
         );
         
 
         // Must be in a valid stage
         require(
-            (stage() == Stages.AWAITING_INTERVIEW) ||
-            (stage() == Stages.AWAITING_JOBOFFER)
+            stage() == Stages.AWAITING_INTERVIEW ||
+            stage() == Stages.AWAITING_JOBOFFER
         );
 
 
@@ -128,13 +128,13 @@ contract JobApplicant
     {
         // This should be called only by the job listing owner
         require(
-            (msg.sender == listingContract.owner())
+            msg.sender == listingContract.owner()
         );
 
 
         // Must be in a valid stage
         require(
-            (stage() == Stages.AWAITING_INTERVIEW)
+            stage() == Stages.AWAITING_INTERVIEW
         );
 
         internalStage = Stages.INTERVIEW_PENDING;
@@ -160,12 +160,12 @@ contract JobApplicant
     {
       // Must be employee 
         require(
-            (msg.sender == listingContract.owner())
+            msg.sender == listingContract.owner()
         );
 
       // Must be in a valid stage
         require(
-            (stage() == Stages.EMPLOYEMENT_PERIOD)
+            stage() == Stages.EMPLOYEMENT_PERIOD
         );
 
         internalStage = Stages.EMPLOYEMENT_TERMINATION;
@@ -182,13 +182,13 @@ contract JobApplicant
     {
       // Must be employee or employer
         require(
-          (msg.sender == applicant) ||
-          (msg.sender == listingContract.owner())
+            msg.sender == applicant ||
+            msg.sender == listingContract.owner()
         );
 
         // Must be in a valid stage
         require(
-          (stage() == Stages.EMPLOYEMENT_PERIOD)
+            stage() == Stages.EMPLOYEMENT_PERIOD
         );
 
         internalStage = Stages.IN_DISPUTE;

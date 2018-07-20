@@ -1,10 +1,10 @@
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
 /// @title Listing
 /// @dev To an individual Job Listing, an job applicant can apply and employ can hire
 
-// import "./JobApplicant.sol";
-// import "./JobApplicationLibrary.sol";
+import "./JobApplicant.sol";
+import "./JobApplicationLibrary.sol";
 
 
 contract Listing {
@@ -13,8 +13,8 @@ contract Listing {
    * Events
    */
 
-  // event ListingApplied(JobApplicant _jobApplicantContract);
-   event ListingChange();
+    event ListingApplied(JobApplicant _jobApplicantContract);
+    event ListingChange();
 
 /*
 *	Data Storage
@@ -41,7 +41,7 @@ contract Listing {
     uint public expiration;
 
     // Hire[] public hiring;
-    // JobApplicant[] public applicants;
+    JobApplicant[] public applicants;
 
     constructor (
       address _owner,
@@ -50,7 +50,6 @@ contract Listing {
       uint _totalResourceRequired,
       uint _resourceType,
       uint _workingHours
-      
     )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,82 +58,82 @@ contract Listing {
 
     public
     {
-      owner			= _owner;
-      ListingRegistry		= msg.sender; // ListingRegistry(msg.sender);
-      ipfsHash			= _ipfsHash;
-      resourceRate		= _resourceRate;
-      totalResourceRequired	= _totalResourceRequired;
-      resourceType		= _resourceType;
-      workingHours		= _workingHours;
-      created			= now;
-      expiration		= created + 14 days;
+        owner			= _owner;
+        ListingRegistry		= msg.sender; // ListingRegistry(msg.sender);
+        ipfsHash			= _ipfsHash;
+        resourceRate		= _resourceRate;
+        totalResourceRequired	= _totalResourceRequired;
+        resourceType		= _resourceType;
+        workingHours		= _workingHours;
+        created			= now;
+        expiration		= created + 14 days;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //			Check whether, modifer is the contract owner of the listing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  modifier isEmployer() {
-    require(msg.sender == owner);
-    _;
-  }
+    modifier isEmployer() {
+        require(msg.sender == owner);
+        _;
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //			Listing Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  function data()
+    function data()
     public
     view
     returns (address _owner, bytes32 _ipfsHash, uint _resourceRate, uint _totalResourceRequired, uint _resourceType,uint _workingHours,uint _created, uint _expiration)
-  {
-    return (owner, ipfsHash, resourceRate, totalResourceRequired, resourceType, workingHours, created, expiration);
-  }
+    {
+        return (owner, ipfsHash, resourceRate, totalResourceRequired, resourceType, workingHours, created, expiration);
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// @dev ApplyToJob()		--> An applicant can apply for a Job Listing
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // function ApplyToJob()
-  //   public
-  //   payable
-  // {
+    function applyToJob()
+    public
+    payable
+    {
 
-  //   // Ensure that we are not past the expiration
-  //   require(now < expiration);
+    // Ensure that we are not past the expiration
+        require(now < expiration);
 
-  //   // Create Job Application contract
-  //   JobApplicant applicant = JobApplicationLibrary.newApplicant(this, msg.sender);
+        // Create Job Application contract
+        JobApplicant applicant = JobApplicationLibrary.newApplicant(this, msg.sender);
 
-  //   applicants.push(applicant);
+        applicants.push(applicant);
 
-  //   // TODO STAN: How to call function *AND* transfer value??
-  //   // applicant.pay.value(msg.value)();
+        // TODO STAN: How to call function *AND* transfer value??
+        // applicant.pay.value(msg.value)();
 
-  //   emit ListingApplied(applicant);
-  //   emit ListingChange();
-  // }
+        emit ListingApplied(applicant);
+        emit ListingChange();
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///	@dev totalJobApplicants(): Return number of applicants for a given Job Listing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // function totalJobApplicants()
-  //   public
-  //   constant
-  //   returns (uint)
-  // {
-  //     return applicants.length;
-  // }
+    function totalJobApplicants()
+      public
+      constant
+      returns (uint)
+    {
+        return applicants.length;
+    }
 
-  // /// @dev getApplicant(): Return Job Application info for a given Job Listing
-  // /// @param _index the index of the Listing we want info about
-  // function getApplicant(uint _index)
-  //   public
-  //   constant
-  //   returns (JobApplicant)
-  // {
-  //   return (
-  //     applicants[_index]
-  //   );
-  // }
+    /// @dev getApplicant(): Return Job Application info for a given Job Listing
+    /// @param _index the index of the Listing we want info about
+    function getApplicant(uint _index)
+      public
+      constant
+      returns (JobApplicant)
+    {
+        return (
+          applicants[_index]
+        );
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///			Hiring Contract Starts							      //
@@ -168,13 +167,17 @@ contract Listing {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// @dev close(): Allows an employer to close the Job Listing from further applicants
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  function close()
-    public
-    isEmployer
-  {
-    totalResourceRequired = 0;
-    emit ListingChange();
-  }
+    function close()
+        public
+        isEmployer
+    {
+        totalResourceRequired = 0;
+        emit ListingChange();
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
+
+
+
+
